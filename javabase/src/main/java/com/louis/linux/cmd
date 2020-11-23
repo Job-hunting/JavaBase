@@ -1,0 +1,35 @@
+1、lsof(list open files)是一个列出当前系统打开文件的工具
+lsof -i:8000
+
+2、netstat -tunlp 用于显示 tcp，udp 的端口和进程等相关情况。
+netstat -tunlp | grep 8000
+
+3、Linux ps命令用于显示当前进程 (process) 的状态
+ps -ef|grep java|grep -v grep 显示出所有的java进程，去处掉当前的grep进程。
+
+4、查看到进程id之后，使用netstat命令查看其占用的端口
+netstat -nap | grep pid
+
+5、同步线上数据库 （copy from yuanyuan）
+参考博客：https://www.cnblogs.com/shamao/p/12092793.html
+
+#!/bin/sh
+table=$1
+rm -rf  mco_promotion.sql
+/home/work/.jumbo/bin/mysqldump   -P3410 -hwisemcooem0000-offline.xdb.all.serv -uchenrongmei -p2nL_PxukkwmuYw_o9oom9yUEjtATQjnW  --skip-lock-tables --database  mco_promotion  >mco_promotion.sql
+#/home/work/.jumbo/bin/mysqldump   -P8622 -h10.94.222.218 -uroot -pjptest123  --skip-lock-tables   juping_rtb $1  > juping_rtb.sql
+#/home/map/.jumbo/bin/mysqldump   -P8031  -h 10.94.31.38  -ujuping  -pjuping   forum_juping $1  >forum_juping.sql
+echo "dump data ok"
+
+echo "insert data begin"
+/home/work/.jumbo/bin/mysql  -h 10.64.64.14   -P8622  -uroot  -pjptest123   < mco_promotion.sql
+echo "insert data over"
+rm -rf  mco_ecs.sql
+
+6、vim全局替换
+%s/10.64.64.14/10.138.47.181/g
+%s/mco_ecs_qa/mco_ecs/g
+
+7、vim查找
+/关键字
+通过 n  或  N 进行上一个或下一个的匹配
